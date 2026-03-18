@@ -1,0 +1,2 @@
+# JavaHashMapTest
+用链表仿写了一个Java集合里面的HashMap用于学习
