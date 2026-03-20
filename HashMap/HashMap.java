@@ -29,50 +29,78 @@ public class HashMap<K, V> {
     }
 
     public void print(){
+        System.out.println("========桶的内容========");
         Node<K, V> cur;
         for(int i = 0; i < capacity; i++){
             cur = (Node<K, V>)table[i];
-            if(cur != null){
+            if(cur == null){
+                System.out.println("[空桶]");
+                continue;
+            }
+            else{
+                while(cur != null){
+                    System.out.print("[" + cur.key + "=" + cur.value + "] ");
+                    cur = cur.next;
+                }
                 System.out.println();
             }
-            while(cur != null){
-                System.out.print(cur.value + " ");
-                cur = cur.next;
-            }
         }
+        System.out.println("========================");
     }
 
     private void resize(){
-        System.out.println("[Debug]: 触发扩容");
         if(table == null){
             this.table = new Object[capacity];
+            return;
         }
-        else{
-            Object[] newTab  = new Object[capacity * 2];
-            /*****rehash******/
-            // Node<K, V> cur;
-            // 
-            // for(int i = 0; i < capacity; i++){
-            //     cur = (Node<K, V>)table[i]
-            //     if(cur != null){
-            //         while(cur != null){
-            //             if(cur.key.hashCode() & (capacity*2) <= )
-            //             cur = cur.next;
-            //         }
-            //     }
-            // }
+        
+        Object[] oldTab  = table;
+        Object[] newTab  = new Object[capacity * 2];
+        /*****rehash******/
+        int old_cap = capacity;
+        int new_cap = old_cap * 2;
+        Node<K, V> cur;
+        Node<K, V> curNext;
+        
+        for(int i = 0; i < old_cap; i++){
+            cur = (Node<K, V>)oldTab[i];
+            if(cur == null){
+                continue;
+            }
             
-            /******************/
-            capacity *= 2;
-            table = newTab;
+            Node<K, V> nextNode;
+            while(cur != null){
+                nextNode = cur.next;
+                int hash = (cur.key == null ? 0 : cur.key.hashCode());
+                int newIdx = hash & (new_cap - 1);
+                
+                curNext = (Node<K, V>) newTab[newIdx];
+                if(curNext == null){
+                    newTab[newIdx] = cur;
+                }else{
+                    while(curNext.next != null){
+                        curNext = curNext.next;
+                    }
+                    curNext.next = cur;
+                }
+                
+                cur.next = null;    //断开原连接防止循环引用A->B->A
+                cur = nextNode;
+            }
         }
-    }
+        
+        /******************/
+        capacity = new_cap;
+        table = newTab;
 
+        System.out.printf("[Debug]: 触发扩容，大小：%d->%d\n", old_cap, new_cap);
+    }
+    
     public void put(K key, V value, boolean isOverwritten){
         if(table == null){
             resize();
         }
-
+        
         int hash = (key == null ? 0 : key.hashCode());
         int idx = hash & (capacity - 1);
 
@@ -103,8 +131,8 @@ public class HashMap<K, V> {
         }
         size++;
         if(size > threshold * capacity){
-            // resize();
             System.out.println("[Debug]: 请求扩容");
+            resize();
         }
     }
 

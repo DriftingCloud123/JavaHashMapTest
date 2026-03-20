@@ -12,6 +12,9 @@ public class Test{
         map.put("nnn1", 7, true);
         map.put("ppp1", 9, true);
 
+        map.print();
+
+
         map.put("kkk2", 2, true);
         map.put("vvv2", 5, true);
         map.put("nnn2", 7, true);
