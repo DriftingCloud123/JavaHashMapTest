@@ -1,4 +1,6 @@
-import HashMap.HashMap;
+package com.demo;
+
+import com.demo.HashMap.HashMap;
 
 public class Test{
     public static void main(String[] args){

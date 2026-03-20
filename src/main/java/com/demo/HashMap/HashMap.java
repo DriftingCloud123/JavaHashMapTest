@@ -1,4 +1,4 @@
-package HashMap;
+package com.demo.HashMap;
 
 public class HashMap<K, V> {
     private Object[] table; //之后转成Node类型
@@ -28,6 +28,11 @@ public class HashMap<K, V> {
         this.threshold = threshold;
     }
 
+    public int size(){
+        return this.size;
+    }
+
+    @SuppressWarnings("unchecked")
     public void print(){
         System.out.println("========桶的内容========");
         Node<K, V> cur;
@@ -48,6 +53,7 @@ public class HashMap<K, V> {
         System.out.println("========================");
     }
 
+    @SuppressWarnings("unchecked")
     private void resize(){
         if(table == null){
             this.table = new Object[capacity];
